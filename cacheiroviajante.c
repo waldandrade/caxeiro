@@ -5,7 +5,7 @@
 #define MAX 100
 
 int main (int argc, char *argv[]) {
-	int i = 0, j, aux[10], tam;
+	int i = 0, l, c, aux[10], tam;
 	char ch[MAX], nome[MAX];
 
     /*
@@ -21,13 +21,20 @@ int main (int argc, char *argv[]) {
 			printf("%s: %d\n", aux, tam);
 		}
 		if(i > 1){
-			fgets(ch, MAX, f); // consome \n
-			fgets(ch, MAX, f); // consome tipo arquivo// mesmo procedimento com 3 coordenadas
-			// se achar fim do arquivo finaliza loop
+			fgets(ch, MAX, f);
+			fgets(ch, MAX, f);
+            fgets(ch, MAX, f); 
+            int distancia;            
+            int matriz[tam][tam];
 
-            // for(i=0;strcmp(ch, "EOF") != 0;i++){
-
-            // }
+            for(l=0; l < tam;l++){
+                for(c=0; c < tam;c++){
+                    fscanf(f, "%d", &distancia);
+                    printf("%d ", distancia);
+                    matriz[l][c] = distancia;
+                }
+                printf("\n");
+            }
 
 			if(strcmp(ch, "EOF")){
 				printf("acabou\n");
