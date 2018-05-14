@@ -47,14 +47,4 @@ void primeira_ninhada(int tam, int population_size, int **matriz, int **populati
             origin_city = actual_city;
         }                     
     }
-
-    //printf("5. iniciando exibição de população \n");
-    int l, c;
-    for(l=0; l < population_size; l++){
-        for(c=0; c < tam; c++){
-            printf("%d ", population[l][c]);
-        }
-        printf(" -- PESO: %d -- \n", population[l][tam]);        
-        printf("\n");
-    }
 }

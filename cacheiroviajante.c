@@ -3,12 +3,14 @@
 #include <string.h>
 #include <math.h>
 #include "geneticoseq\primeira_ninhada.h"
+#include "geneticoseq\darwin.h"
 
 #define MAX 100
 #define POP_SIZE 5
+#define NUM_GERACOES = 50
 
 int main (int argc, char *argv[]) {
-	int i = 0, j, l, c, aux[10], tam;
+	int i = 0, j, cont, l, c, aux[10], tam;
 	char ch[MAX], nome[MAX];
 
     /*
@@ -49,6 +51,13 @@ int main (int argc, char *argv[]) {
             }
 
             primeira_ninhada(tam, POP_SIZE, matriz, population);
+
+            /**
+             * 
+             * População tem a primeira geração. O ideal é que continuemos passando a referência para que não precisemos mexer muito a estrutura.
+             * 
+            */
+            reproduzir(tam, POP_SIZE, population);
 
 			if(strcmp(ch, "EOF")){
 				printf("acabou\n");
