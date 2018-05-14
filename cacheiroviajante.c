@@ -52,12 +52,12 @@ int main (int argc, char *argv[]) {
 
             primeira_ninhada(tam, POP_SIZE, matriz, population);
 
-            /**
+            /*
              * 
              * População tem a primeira geração. O ideal é que continuemos passando a referência para que não precisemos mexer muito a estrutura.
              * 
-            */
-            reproduzir(tam, POP_SIZE, population);
+             */
+            reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
 
 			if(strcmp(ch, "EOF")){
 				printf("acabou\n");
