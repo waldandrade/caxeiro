@@ -5,9 +5,10 @@
 #include "geneticoseq\primeira_ninhada.h"
 
 #define MAX 100
+#define POP_SIZE 5
 
 int main (int argc, char *argv[]) {
-	int i = 0, l, c, aux[10], tam;
+	int i = 0, j, l, c, aux[10], tam;
 	char ch[MAX], nome[MAX];
 
     /*
@@ -34,10 +35,20 @@ int main (int argc, char *argv[]) {
                 for(c=0; c < tam;c++){
                     fscanf(f, "%d", &distancia);
                     matriz[l][c] = distancia;
+                    // printf("%d ", matriz[l][c]);
                 }
+                // printf("\n\n");
+            }
+            
+            printf("Matriz carregada! \n\n");
+      
+            int **population = malloc(POP_SIZE * sizeof(*population));
+            for (j = 0; j < POP_SIZE; j++){
+                //o tamanho de cada indivíduo deve ser tam + 1 para que o último elemento armazene o peso/distância
+                population[j] = malloc((tam+1) * sizeof(*population[j]));
             }
 
-            primeira_ninhada(tam, matriz);
+            primeira_ninhada(tam, POP_SIZE, matriz, population);
 
 			if(strcmp(ch, "EOF")){
 				printf("acabou\n");
