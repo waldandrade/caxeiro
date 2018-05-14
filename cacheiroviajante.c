@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "geneticoseq\primeira_ninhada.h"
 
 #define MAX 100
 
@@ -25,17 +26,18 @@ int main (int argc, char *argv[]) {
 			fgets(ch, MAX, f);
 			fgets(ch, MAX, f);
             fgets(ch, MAX, f); 
-            int distancia;            
-            int matriz[tam][tam];
+            int distancia;     
+            int **matriz = malloc(tam * sizeof(*matriz));       
 
             for(l=0; l < tam;l++){
+                matriz[l] = malloc(tam * sizeof(*matriz[l]));
                 for(c=0; c < tam;c++){
                     fscanf(f, "%d", &distancia);
-                    printf("%d ", distancia);
                     matriz[l][c] = distancia;
                 }
-                printf("\n");
             }
+
+            primeira_ninhada(tam, matriz);
 
 			if(strcmp(ch, "EOF")){
 				printf("acabou\n");
