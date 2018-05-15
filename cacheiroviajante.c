@@ -59,8 +59,16 @@ int main (int argc, char *argv[]) {
              */
             reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
 
+            int melhor_distancia = NULL;
+            for(j = 0; j < POP_SIZE; j++){
+                int distancia = population[j][tam];
+                if(melhor_distancia == NULL || distancia < melhor_distancia){
+                    melhor_distancia = distancia;
+                }
+            }
+
 			if(strcmp(ch, "EOF")){
-				printf("acabou\n");
+				printf("A melhor distância encontrada é: %d \n", melhor_distancia);
 				fclose(f);
 				break;
 			}
