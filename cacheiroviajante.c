@@ -59,10 +59,10 @@ int main (int argc, char *argv[]) {
              */
             reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
 
-            int melhor_distancia = NULL;
+            int melhor_distancia = -1;
             for(j = 0; j < POP_SIZE; j++){
                 int distancia = population[j][tam];
-                if(melhor_distancia == NULL || distancia < melhor_distancia){
+                if(melhor_distancia == -1 || distancia < melhor_distancia){
                     melhor_distancia = distancia;
                 }
             }
