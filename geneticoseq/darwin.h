@@ -4,37 +4,28 @@
 void reproduzir(int tam, int population_size, int **matriz, int **population, int NUM_GERACOES){
 	
 	int l, c;	
-	int pai;
+	int paiA, paiB;
 	
-	int **filhoA = malloc(tam * sizeof(*filhoA));
-	int **filhoB = malloc(tam * sizeof(*filhoB));
+	int **filhoA = (int **)malloc(tam * sizeof(int *));
+	int **filhoB = (int **)malloc(tam * sizeof(int *));
 	
-	for(l=0; l < population_size-1;l++){
-    filhoA[l] = malloc(tam * sizeof(*filhoA[l]));
+	for(l=0; l < population_size-1;l+=2){
+    	filhoA[l] = (int *)malloc(tam * sizeof(int));
+    	filhoB[l] = (int *)malloc(tam * sizeof(int));
+    	paiA = l;
+    	paiB = l + 1;
 		for(c=0; c < tam;c++){
 			if(c<(tam/2)){
-			pai = l;
-			filhoA[l][c] = population[pai][c];
+				filhoA[l][c] = population[paiA][c];
+				filhoB[l][c] = population[paiB][c];
 			}else{
-			pai = l+1;
-			filhoA[l][c] = population[pai][c];
+				filhoA[l][c] = population[paiB][c];
+				filhoB[l][c] = population[paiA][c];
 			}
 		}
 		// printf("\n\n");
     }
     
-    for(l=0; l < population_size-1;l++){
-    filhoB[l] = malloc(tam * sizeof(*filhoB[l]));
-		for(c=0; c < tam;c++){
-			if(c<(tam/2)){
-			pai = l+1;
-			filhoB[l][c] = population[pai][c];
-			}else{
-			pai = l;
-			filhoB[l][c] = population[pai][c];
-			}
-		}
-		// printf("\n\n");
     }
 
 	/*
