@@ -7,12 +7,9 @@ void primeira_ninhada(int tam, int population_size, int **matriz, int **populati
 
 	//printf("\n\n-- Criando a primeira população aleatória -> "); //pode ser apagado...
 
-    //inicializando a função randômica
-    srand(time(NULL));
-
-
     int origin_city, actual_city;
     int cont, i, j;
+
     for(cont=0; cont<population_size; cont++)
 	{
        population[cont][tam] = 0;

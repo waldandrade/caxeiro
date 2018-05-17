@@ -1,21 +1,36 @@
-#include <pthread.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
-//threads
-pthread_t thread0;
-pthread_t thread1;
+int main(){
+	
+	//thread com numero de gerações
+	pthread_t thread0[NUM_GERACOES/2];
+	pthread_t thread1[NUM_GERACOES/2];
+	
+	//vetor de N posições
+	int N = NUM_GERACOES;
 
-//ponto de entrada da thread
-void *minha_funcao_de_entrada(void *param);
-
-//criar a thread
-pthread_create(&thread0, NULL, minha_funcao_de_entrada, &parametro);
-pthread_create(&thread1, NULL, minha_funcao_de_entrada, &parametro);
-
-//juntando as threads
-pthread_join(thread0, NULL);
-pthread_join(thread1, NULL);
-
+	pthread thread0, thread1;
+		
+	//criar a thread
+	for(i=0,i<N/2,i++){
+		pthread_create(&thread0[i], NULL, minha_funcao_de_entrada,(void *)(&filhoA));
+	}
+	//criar a thread
+	for(i=N/2,i<N,i++){
+		pthread_create(&thread1[i], NULL, minha_funcao_de_entrada,(void *)(&filhoB));
+	}	
+	//juntando as threads
+	for(i=0,i<N/2,i++){
+		pthread_join(thread0[i], NULL);
+	}
+	//juntando as threads
+	for(i=N/2,i<N,i++){
+		pthread_join(thread1[i], NULL);
+	}
+	
+}
 
 /*
 
