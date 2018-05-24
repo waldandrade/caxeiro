@@ -2,12 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 #include "geneticoseq\primeira_ninhada.h"
-#include "geneticoseq\darwin.h"
+#include "geneticothread\darwin.h"
 
 #define MAX 100
 #define POP_SIZE 5
 #define NUM_GERACOES 50
+#define MUTATION_RATE 0.05
+
+int **matriz;
+int **population;
 
 int main (int argc, char *argv[]) {
 	int i = 0, j, l, c, tam;
@@ -29,8 +34,8 @@ int main (int argc, char *argv[]) {
 		}
 		if(i > 1){
 			int distancia;     
-            int **matriz = (int **)malloc(tam * sizeof(int *));
-            int **population = (int **)malloc(POP_SIZE * sizeof(int *));
+            matriz = (int **)malloc(tam * sizeof(int *));
+            population = (int **)malloc(POP_SIZE * sizeof(int *));
             
 			fgets(ch, MAX, f);
 			fgets(ch, MAX, f);
@@ -60,7 +65,7 @@ int main (int argc, char *argv[]) {
              * População tem a primeira geração. O ideal é que continuemos passando a referência para que não precisemos mexer muito a estrutura.
              * 
              */
-            
+
             reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
 
             int melhor_distancia = -1;

@@ -7,9 +7,9 @@
 int v[SIZE];
 
 void * function (void *arg){
-	int *valor = (int)(arg);
+	int valor = *(int*)(arg);
 	int i;
-	if(*valor == 1){
+	if(valor == 1){
 		printf("thread 1 executando\n");
 		for(i=0;i<SIZE/2;i++){
 			v[i] = 1;
@@ -45,11 +45,11 @@ int main(){
 }
 
 /*
-//thread com numero de gerações
+//thread com numero de geraï¿½ï¿½es
 	pthread_t thread0[NUM_GERACOES/2];
 	pthread_t thread1[NUM_GERACOES/2];
 	
-	//vetor de N posições
+	//vetor de N posiï¿½ï¿½es
 	int N = NUM_GERACOES;
 
 	pthread thread0, thread1;
