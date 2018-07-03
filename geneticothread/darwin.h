@@ -90,7 +90,7 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
             int paia = (rand()%pop_size);	
             int paib = (rand()%pop_size);	
             // o espaço final servirá para o peso/distância	
-            filhos[l] = malloc((tam + 1) * sizeof(*filhos[l]));	
+            filhos[l] = malloc((tam + 1) * sizeof(int)); //MODIFICADO
             filhos[l][tam] = 0;	
  	
             origin_city = -1;	
@@ -100,7 +100,8 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
             mutateThisGene = rand() % (int)(1.0 / MUTATION_RATE);	
             for(c=0; c < tam;c++){	
                 if(mutateThisGene == 0){                    	
-                    actual_city = rand() % tam;               	
+                    actual_city = rand() % tam;
+                    mutateThisGene = 1;  //MODIFICADO
                 }else{	
                     if(c<crossoverPoint){	
                         actual_city = population[paia][c];        	

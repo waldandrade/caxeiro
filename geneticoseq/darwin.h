@@ -52,13 +52,14 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
     int crossoverPoint;	
     int mutateThisGene;
 	int num_filhos = population_size * 10;
-    srand(time(NULL));
+
+	// SRAND REMOVIDO DE DARWIN
 
     for (i = 0; i < NUM_GERACOES; i++) {
-        printf ("#%d\n", i);
-	    int **filhos = malloc(num_filhos * sizeof(*filhos));
+        //printf ("#%d\n", i);
+	    int **filhos = malloc(num_filhos * sizeof(int *)); //MODIFICADO
         //criei esse vetor para armazenar as menores distâncias
-	    int **nova_geracao = malloc(population_size * sizeof(*nova_geracao));
+	    int **nova_geracao = malloc(population_size * sizeof(int *)); //MODIFICADO
         for (cont = 0; cont < population_size; cont++){
             nova_geracao[cont] = malloc(2 * sizeof(int));
             nova_geracao[cont][0] = -1;
@@ -70,7 +71,7 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
             int paia = (rand()%population_size);	
             int paib = (rand()%population_size);	
             // o espaço final servirá para o peso/distância	
-            filhos[l] = malloc((tam + 1) * sizeof(*filhos[l]));	
+            filhos[l] = malloc((tam + 1) * sizeof(int)); //MODIFICADO
             filhos[l][tam] = 0;	
  	
             origin_city = -1;	
@@ -80,7 +81,8 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
             mutateThisGene = rand() % (int)(1.0 / MUTATION_RATE);	
             for(c=0; c < tam;c++){	
                 if(mutateThisGene == 0){                    	
-                    actual_city = rand() % tam;               	
+                    actual_city = rand() % tam;
+                    mutateThisGene = 1;  //MODIFICADO
                 }else{	
                     if(c<crossoverPoint){	
                         actual_city = population[paia][c];        	
