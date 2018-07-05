@@ -7,7 +7,7 @@
 
 #define MAX 100
 #define POP_SIZE 5
-#define NUM_GERACOES 50
+#define NUM_GERACOES 100
 
 int main (int argc, char *argv[]) {
 	int i = 0, j, l, c, tam;

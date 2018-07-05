@@ -2,28 +2,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <pthread.h>
-#include "geneticoseq\primeira_ninhada.h"
-#include "geneticothread\darwin.h"
+#include "CaicheiroMPI\primeira_ninhada.h"
+#include "CaicheiroMPI\darwin.h"
+
+#include<mpi.h>
 
 #define MAX 100
 #define POP_SIZE 5
 #define NUM_GERACOES 100
-#define MUTATION_RATE 0.05
-
-int **matriz;
-int **population;
 
 int main (int argc, char *argv[]) {
+	
 	int i = 0, j, l, c, tam;
 	char ch[MAX] = "1", nome[MAX], aux[10];
+
+	int id, qtdnodes, n;
+	
+	MPI_Status status;
+	
+	MPI_Init(&argc,&argv); /* inicializacao */
+
+	MPI_Comm_rank(MPI_COMM_WORLD, &id); /* quem sou? */
+
+	MPI_Comm_size(MPI_COMM_WORLD, &qtdnodes); /* quantos s�o? */
+
     /*
     Lê o arquivo como argumento
     */
 	FILE *f = fopen(argv[1], "r");
 	
 	//inicializando a função randômica
-    srand(time(0));
+    srand(time(0)+id); //MODIFICADO
 
     // loop linha a linha ate achar o fim do arquivo
 	for(i=0;strcmp(ch, "EOF") != 0;i++){
@@ -33,9 +42,11 @@ int main (int argc, char *argv[]) {
 			printf("%s: %d\n", aux, tam);
 		}
 		if(i > 1){
-			int distancia;     
-            matriz = (int **)malloc(tam * sizeof(int *));
-            population = (int **)malloc(POP_SIZE * sizeof(int *));
+			int distancia;
+            int MainVect[tam * tam];
+            int vec = 0;
+			int **matriz = (int **)malloc(tam * sizeof(int *));
+            int population[POP_SIZE * (tam + 1)];
             
 			fgets(ch, MAX, f);
 			fgets(ch, MAX, f);
@@ -51,33 +62,44 @@ int main (int argc, char *argv[]) {
                 // printf("\n\n");
             }
             
-            printf("Matriz carregada! \n\n");
-      
-            
-            for (j = 0; j < POP_SIZE; j++){
-                //o tamanho de cada indivíduo deve ser tam + 1 para que o último elemento armazene o peso/distância
-                population[j] = (int *)malloc((tam+1) * sizeof(int));
-            }
-            primeira_ninhada(tam, POP_SIZE, matriz, population);
+            for(l = 0; l < tam; l++){
+            	for(c = 0; c < tam; c++){
+            		MainVect[vec] = matriz[l][c];
+            		vec = vec + 1;
+				}
+			}
+	
+	printf("passou por aqui!");
+	
+	if (id==0) { /* sou o zero? */
 
-            /*
-             * 
-             * População tem a primeira geração. O ideal é que continuemos passando a referência para que não precisemos mexer muito a estrutura.
-             * 
-             */
+		primeira_ninhada(tam, POP_SIZE, MainVect, population);
 
-            reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
+		for (j = 0; j < qtdnodes; j++){
+			MPI_Send(&population, (POP_SIZE * (tam+1)), MPI_INT, j, 100, MPI_COMM_WORLD);
+		}
+
+	}else{ /* sou um dos outros */
+
+		MPI_Recv(&population, (POP_SIZE * (tam+1)), MPI_INT, 0, 100, MPI_COMM_WORLD, &status);
+	
+	}
+
+	reproduzir(tam, POP_SIZE, MainVect, population, NUM_GERACOES);
+
+	/* termina */
+			
 
             int melhor_distancia = -1;
             for(j = 0; j < POP_SIZE; j++){
-                int distancia = population[j][tam];
+                int distancia = population[(j * (tam+1)) + tam];
                 if(melhor_distancia == -1 || distancia < melhor_distancia){
                     melhor_distancia = distancia;
                 }
             }
 
 			if(strcmp(ch, "EOF")){
-				printf("A melhor distância encontrada é: %d \n", melhor_distancia);
+				printf("Sou o processo %d e a melhor distância que encontrei foi: %d \n", id, melhor_distancia);
 				fclose(f);
 				break;
 			}
@@ -94,5 +116,9 @@ int main (int argc, char *argv[]) {
 			}
 		}
 	}
+
+	MPI_Finalize();
+
 	return 0;
+
 }
