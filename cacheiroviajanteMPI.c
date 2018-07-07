@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "CaicheiroMPI\primeira_ninhada.h"
-#include "CaicheiroMPI\darwin.h"
+#include "CaicheiroMPI/primeira_ninhada.h"
+#include "CaicheiroMPI/darwin.h"
 
 #include<mpi.h>
 
