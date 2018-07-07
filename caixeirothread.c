@@ -7,7 +7,7 @@
 #include "geneticothread\darwin.h"
 
 #define MAX 100
-#define POP_SIZE 5
+#define POP_SIZE 500
 #define NUM_GERACOES 100
 
 int main (int argc, char *argv[]) {
