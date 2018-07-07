@@ -8,7 +8,7 @@
 #include<mpi.h>
 
 #define MAX 100
-#define POP_SIZE 500
+#define POP_SIZE 100
 #define NUM_GERACOES 100
 
 int main (int argc, char *argv[]) {
