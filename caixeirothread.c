@@ -9,10 +9,6 @@
 #define MAX 100
 #define POP_SIZE 5
 #define NUM_GERACOES 100
-#define MUTATION_RATE 0.05
-
-int **matriz;
-int **population;
 
 int main (int argc, char *argv[]) {
 	int i = 0, j, l, c, tam;
@@ -20,7 +16,15 @@ int main (int argc, char *argv[]) {
     /*
     Lê o arquivo como argumento
     */
-	FILE *f = fopen(argv[1], "r");
+    int t_number = atoi(argv[1]);
+    printf("Num of threads %d\n", t_number);
+
+    tdata_t *my_data;
+    my_data = (tdata_t *) malloc(sizeof(tdata_t));
+    my_data->num_geracoes = NUM_GERACOES;
+    my_data->population_size = POP_SIZE;
+
+	FILE *f = fopen(argv[2], "r");
 	
 	//inicializando a função randômica
     srand(time(0));
@@ -29,48 +33,45 @@ int main (int argc, char *argv[]) {
 	for(i=0;strcmp(ch, "EOF") != 0;i++){
         if(i == 1){
             fscanf(f, "%s", aux);
-			fscanf(f, "%d", &tam); // Pega dimensao do grafo
-			printf("%s: %d\n", aux, tam);
+			fscanf(f, "%d", &tam); // Pega dimensao do grafo     
+            my_data->tam = tam;
 		}
 		if(i > 1){
 			int distancia;     
-            matriz = (int **)malloc(tam * sizeof(int *));
-            population = (int **)malloc(POP_SIZE * sizeof(int *));
+            my_data->matriz = (int **)malloc(my_data->tam * sizeof(int *));
+            my_data->population = (int **)malloc(my_data->population_size * sizeof(int *));
             
 			fgets(ch, MAX, f);
 			fgets(ch, MAX, f);
             fgets(ch, MAX, f); 
             
-            for(l=0; l < tam;l++){
-                matriz[l] = (int *) malloc(tam * sizeof(int));
-                for(c=0; c < tam;c++){
+            for(l=0; l < my_data->tam;l++){
+                my_data->matriz[l] = (int *) malloc(my_data->tam * sizeof(int));
+                for(c=0; c < my_data->tam;c++){
                     fscanf(f, "%d", &distancia);
-                    matriz[l][c] = distancia;
+                    my_data->matriz[l][c] = distancia;
                     // printf("%d ", matriz[l][c]);
                 }
                 // printf("\n\n");
             }
-            
-            printf("Matriz carregada! \n\n");
-      
-            
-            for (j = 0; j < POP_SIZE; j++){
+                  
+            for (j = 0; j < my_data->population_size; j++){
                 //o tamanho de cada indivíduo deve ser tam + 1 para que o último elemento armazene o peso/distância
-                population[j] = (int *)malloc((tam+1) * sizeof(int));
+                my_data->population[j] = (int *)malloc((my_data->tam+1) * sizeof(int));
             }
-            primeira_ninhada(tam, POP_SIZE, matriz, population);
+            primeira_ninhada(my_data->tam, my_data->population_size, my_data->matriz, my_data->population);
 
-            /*
-             * 
-             * População tem a primeira geração. O ideal é que continuemos passando a referência para que não precisemos mexer muito a estrutura.
-             * 
-             */
+            for (j = 0; j < t_number; j++){
+                pthread_t t1;
+                pthread_create(&t1, NULL, reproduzir, (void *)(&my_data));
+                pthread_join(t1, NULL);
+            }
 
-            reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
+            //reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
 
             int melhor_distancia = -1;
-            for(j = 0; j < POP_SIZE; j++){
-                int distancia = population[j][tam];
+            for(j = 0; j < my_data->population_size; j++){
+                int distancia = my_data->population[j][my_data->tam];
                 if(melhor_distancia == -1 || distancia < melhor_distancia){
                     melhor_distancia = distancia;
                 }

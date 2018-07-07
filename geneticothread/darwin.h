@@ -2,31 +2,23 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
-#include <pthread.h>
 
 #define MUTATION_RATE    0.05
 
 typedef struct thread_data {
- int **geracao;
- int filho;
- int distancia;
-} tdata_t;
+ int **matriz;
+ int **population;
+ int num_geracoes;
+ int tam;
+ int population_size;
+ } tdata_t;
 
 int pop_size = 0;
 
-//void new_ger(int population_size, int filho, int distancia, int **geracao){
-void *new_ger(void *args){
-
-    tdata_t *my_data;
-    my_data = *(tdata_t **) args;
-
-    int **geracao = my_data->geracao;
-    int filho = my_data->filho;
-    int distancia = my_data->distancia;
-
+void new_ger(int population_size, int filho, int distancia, int **geracao){
     int i;
     int maior_indice = 0;
-    for(i=0; i < pop_size; i++){
+    for(i=0; i < population_size; i++){
         if(geracao[i][0] == -1){
             maior_indice = i;
             break;
@@ -41,31 +33,19 @@ void *new_ger(void *args){
     }
 }
 
-void reproduzir(int tam, int population_size, int **matriz, int **population, int NUM_GERACOES){
-	
-	// int l, c;	
-	// int paiA, paiB;
-	
-	// int **filhoA = (int **)malloc(tam * sizeof(int *));
-	// int **filhoB = (int **)malloc(tam * sizeof(int *));
-	
-	// for(l=0; l < population_size-1;l+=2){
-    // 	filhoA[l] = (int *)malloc(tam * sizeof(int));
-    // 	filhoB[l] = (int *)malloc(tam * sizeof(int));
-    // 	paiA = l;
-    // 	paiB = l + 1;
-	// 	for(c=0; c < tam;c++){
-	// 		if(c<(tam/2)){
-	// 			filhoA[l][c] = population[paiA][c];
-	// 			filhoB[l][c] = population[paiB][c];
-	// 		}else{
-	// 			filhoA[l][c] = population[paiB][c];
-	// 			filhoB[l][c] = population[paiA][c];
-	// 		}
-	// 	}
-    // }
 
-    pop_size = population_size;
+void *reproduzir(void *args){
+
+    printf("Eu sou uma thread!");
+
+    tdata_t *my_data;
+    my_data = *(tdata_t **) args;
+
+    int **population = my_data->population;
+    int **matriz = my_data->matriz;
+    int tam = my_data->tam;
+    int pop_size = my_data->population_size;
+    int NUM_GERACOES = my_data->num_geracoes;
 
     int l, c, i, j, cont;
     int origin_city, actual_city;
@@ -76,7 +56,6 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
 	// SRAND REMOVIDO DE DARWIN
 
     for (i = 0; i < NUM_GERACOES; i++) {
-        //printf ("#%d\n", i);
 	    int **filhos = malloc(num_filhos * sizeof(int *)); //MODIFICADO
         //criei esse vetor para armazenar as menores distâncias
 	    int **nova_geracao = malloc(pop_size * sizeof(int *)); //MODIFICADO
@@ -124,38 +103,21 @@ void reproduzir(int tam, int population_size, int **matriz, int **population, in
                 filhos[l][c] = actual_city;	
                 origin_city = actual_city;	
             }	
-	
-            // printf("PESO: %d --\n", filhos[l][tam]);	
-	
-            tdata_t *my_data;
-            my_data = (tdata_t *) malloc(sizeof(tdata_t));
-            my_data->geracao = nova_geracao;
-            my_data->filho = l;
-            my_data->distancia = filhos[l][tam];
 
-            //criei essa chamada para dentro dela fazer o calculo necessário	
-            pthread_t t1;
-            pthread_create(&t1, NULL, new_ger, (void *)(&my_data));
-            pthread_join(t1, NULL);
+            	
+            new_ger(pop_size, l, filhos[l][tam], nova_geracao);	
 
             // new_ger(pop_size, l, filhos[l][tam], nova_geracao);	
         }	
 	
         for(j=0; j < pop_size; j++){	
            //printf(" - %d (%d) --", j, nova_geracao[j][0]);   	
-           printf(" - %d (%d) - PESO: %d --", j, nova_geracao[j][0], nova_geracao[j][1]);    	
-           printf("\n");	
+           // printf(" - %d (%d) - PESO: %d --", j, nova_geracao[j][0], nova_geracao[j][1]);    	
+           // printf("\n");	
            population[j] = filhos[nova_geracao[j][0]];	
         }	
 	
-        //free (nova_geracao);	
-        //free (filhos);	
 	
      }	     
 
 }
-
-// Criando as threads
-// pthread_t t1,t2;
-// pthread_create(&t1, NULL, reproduzir, (void*)(&tam));
-// pthread_join(t1, NULL);

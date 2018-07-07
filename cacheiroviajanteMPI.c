@@ -8,7 +8,7 @@
 #include<mpi.h>
 
 #define MAX 100
-#define POP_SIZE 5
+#define POP_SIZE 500
 #define NUM_GERACOES 100
 
 int main (int argc, char *argv[]) {
@@ -68,9 +68,7 @@ int main (int argc, char *argv[]) {
             		vec = vec + 1;
 				}
 			}
-	
-	printf("passou por aqui!");
-	
+		
 	if (id==0) { /* sou o zero? */
 
 		primeira_ninhada(tam, POP_SIZE, MainVect, population);
