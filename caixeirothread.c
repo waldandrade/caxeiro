@@ -7,7 +7,7 @@
 #include "geneticothread\darwin.h"
 
 #define MAX 100
-#define POP_SIZE 5
+#define POP_SIZE 500
 #define NUM_GERACOES 100
 
 int main (int argc, char *argv[]) {
@@ -61,10 +61,14 @@ int main (int argc, char *argv[]) {
             }
             primeira_ninhada(my_data->tam, my_data->population_size, my_data->matriz, my_data->population);
 
+            pthread_t threads[t_number];
             for (j = 0; j < t_number; j++){
                 pthread_t t1;
-                pthread_create(&t1, NULL, reproduzir, (void *)(&my_data));
-                pthread_join(t1, NULL);
+                pthread_create(&(threads[j]), NULL, reproduzir, (void *)(&my_data));
+            }
+
+            for (j = 0; j < t_number; j++){
+                pthread_join(threads[j], NULL);
             }
 
             //reproduzir(tam, POP_SIZE, matriz, population, NUM_GERACOES);
